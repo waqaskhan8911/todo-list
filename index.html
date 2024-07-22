@@ -204,85 +204,79 @@
         </form>
     </Section>
     <script>
-        //Start animation
-        function toggleFlip() {
-            let flipcard = document.getElementById("formsection");
-            let btn = document.getElementById('Btn_toggle');
-            if (flipcard) {
-                flipcard.id = "turn";
-                btn.innerHTML = "CLOSE"
-            } else {
-                flipcard = document.getElementById("turn");
-                flipcard.id = "formsection";
-                btn.innerHTML = "OPEN"
-            }
-        }
-        //End Animation
+// Start animation
+function toggleFlip() {
+    let flipcard = document.getElementById("formsection");
+    let btn = document.getElementById('Btn_toggle');
+    if (flipcard) {
+        flipcard.id = "turn";
+        btn.innerHTML = "CLOSE"
+    } else {
+        flipcard = document.getElementById("turn");
+        flipcard.id = "formsection";
+        btn.innerHTML = "OPEN"
+    }
+}
+// End Animation
 
-        const forminput = document.getElementById("forminput");
-        const inputfieldBtn = document.getElementById("inputfieldBtn");
-        const recordsinfo = document.getElementById('records');
-        const inputfieldBtnText = inputfieldBtn.innerText;
-        let editbtn = null;
-        let arrData = [];
+const forminput = document.getElementById("forminput");
+const inputfieldBtn = document.getElementById("inputfieldBtn");
+const recordsinfo = document.getElementById('records');
+const inputfieldBtnText = inputfieldBtn.innerText;
+let editbtn = null;
+let arrData = [];
 
-        let objstr = localStorage.getItem('user');
-        if (objstr != null) {
-            arrData = JSON.parse(objstr);
-        } else if (objstr != "") {
-            arrData = JSON.parse(objstr);
-        }
+let objstr = localStorage.getItem('user');
+if (objstr) {
+    arrData = JSON.parse(objstr);
+}
+displayInfo();
 
-        inputfieldBtn.onclick = () => {
-            let todoListdata = forminput.value;
-            if (editbtn != null) {
-                arrData.splice(editbtn, 1, { 'name': todoListdata });
-                addInfo();
-                editbtn = null;
-            } else {
+inputfieldBtn.onclick = () => {
+    let todoListdata = forminput.value;
+    if (editbtn != null) {
+        arrData.splice(editbtn, 1, { 'name': todoListdata });
+        editbtn = null;
+    } else {
+        arrData.push({ 'name': todoListdata });
+    }
+    addInfo(arrData);
+    forminput.value = "";
+    inputfieldBtn.innerText = inputfieldBtnText;
+}
 
-                arrData.push({ 'name': todoListdata });
-            }
-            addInfo(arrData);
-            forminput.value = "";
-            displayInfo();
-            inputfieldBtn.innerText = inputfieldBtnText;
+function addInfo(arrData) {
+    let strData = JSON.stringify(arrData);
+    localStorage.setItem('user', strData);
+    displayInfo();
+}
 
-        }
-
-        function addInfo(arrData) {
-            let strData = JSON.stringify(arrData);
-            localStorage.setItem('user', strData);
-            displayInfo();
-        }
-
-        function displayInfo() {
-            let statement = '';
-            arrData.forEach((users, index) => {
-                statement += `<ul class="sub_section3">
+function displayInfo() {
+    let statement = '';
+    arrData.forEach((users, index) => {
+        statement += `<ul class="sub_section3">
                     <li class="Todo-list"><span>${users.name}</span>
                         <div><i class="fa-solid fa-pen-to-square" onclick="editInfo(${index})"></i><i class="fa-solid fa-trash" onclick="deleteInfo(${index})"></i></div>
                     </li>
                 </ul>`;
-            });
-            recordsinfo.innerHTML = statement;
-        }
+    });
+    recordsinfo.innerHTML = statement;
+}
 
-        function editInfo(id) {
-            // edit logic
-            editbtn = id;
-            forminput.value = arrData[id].name;
-            inputfieldBtn.innerText = "Save";
-            forminput.focus();
-        }
+function editInfo(id) {
+    editbtn = id;
+    forminput.value = arrData[id].name;
+    inputfieldBtn.innerText = "Save";
+    forminput.focus();
+}
 
-        function deleteInfo(id) {
-            arrData.splice(id, 1);
-            addInfo(arrData);
-            displayInfo();
-        }
+function deleteInfo(id) {
+    arrData.splice(id, 1);
+    addInfo(arrData);
+}
 
 
+   
     </script>
 </body>
 
